@@ -11,27 +11,6 @@ const imagekit = new ImageKIt({
 async function createPostController(req,res){
     console.log(req.body,req.file); // caption or file hamara body se aa rha h
     
-    const token = req.cookies.token // ye hamne find kiya ki konsa user post create kr rha h or request kr rha h post create krne ki
-    // jab user post create krega to vo apne token k sath request krega usi token se ham find krenge konsa user h
-
-    if(!token){
-        return res.send(401).json({
-            message: 'TOken not exist, Unauthorized access'
-        })
-    }
-
-    let decoded = null
-
-    try{   // agar user sahi token se authorize kr rha h to try method run hoga
-        decoded = jwt.verify(token, process.env.JWT_SECRET)
-    } catch(err){   // agar token glt h to catch method error send kr dega glt token ka
-        return res.status(401).json({
-            message: 'user not anthorized'
-        })
-    }
-
-    console.log(decoded);
-    
     const file =await imagekit.files.upload({
         file: await toFile(Buffer.from(req.file.buffer),'file'),
         fileName : 'test' ,
@@ -41,7 +20,7 @@ async function createPostController(req,res){
     const post = await postModel.create({
         caption: req.body.caption,
         imgUrl: file.url,
-        user: decoded.id
+        user: req.user.id
     })
 
     // res.send(file)
@@ -54,25 +33,7 @@ async function createPostController(req,res){
 
 async function getPostController(req,res){
 
-    const token = req.cookies.token
-
-    if(!token){
-        return res.status(401).json({
-            message: 'Unauthorized access'
-        })
-    }
-
-    let decoded = null
-
-    try{
-      decoded =  jwt.verify(token , process.env.JWT_SECRET)
-    } catch(err){
-        return res.status(401).json({
-            message: 'Token Invalid'
-        })
-    }
-
-    const userId = decoded.id
+    const userId = req.user.id
 
     const posts = await postModel.find({
         user: userId
@@ -87,25 +48,7 @@ async function getPostController(req,res){
 
 async function getPostDetailsController(req,res){
 
-    const token = req.cookies.token
-
-    if(!token){
-        return res.status(401).json({
-            message: 'Unauthorized access'
-        })
-    }
-
-    let decoded = null
-
-    try{
-        decoded = jwt.verify(token , process.env.JWT_SECRET)
-    } catch(err){
-        return res.status(401).json({
-            message: 'Invalid Token'
-        })
-    }
-
-    const userId = decoded.id
+    const userId = req.user.id
 
     const postId = req.params.postId
 

@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     profileImage: {
         type: String,
         default:'https://ik.imagekit.io/lr2cwsem8/default-avatar-profile-icon-social-media-user-vector-49816613.avif'
-    }
+    },
 })
 
 const userModel = mongoose.model('users', userSchema)

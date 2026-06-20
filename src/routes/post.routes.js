@@ -3,6 +3,7 @@ const postRouter = express.Router()
 const postController = require('../controllers/post.controller')
 const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
+const identifyUser = require('../middleware/auth.middleware')  // middleware
 
 /**
  * POST /api/posts
@@ -10,7 +11,7 @@ const upload = multer({ storage: multer.memoryStorage() })
  * /api/posts/ --routing api
  */
 
-postRouter.post('/',upload.single('image'),postController.createPostController)
+postRouter.post('/',upload.single('image'), identifyUser ,postController.createPostController)
 
 postRouter.get('/', postController.getPostController)
 
@@ -20,6 +21,6 @@ postRouter.get('/', postController.getPostController)
  * belongs to the user that request come from
  */
 
-postRouter.get('/details/:postId', postController.getPostDetailsController)
+postRouter.get('/details/:postId', identifyUser , postController.getPostDetailsController)
 
 module.exports = postRouter   
