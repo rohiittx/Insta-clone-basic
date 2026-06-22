@@ -79,7 +79,7 @@ async function likePostController(req, res) {
     const postId = req.params.postId;
 
     // Check if the post exists
-    const post = await postModel.findById(postId);
+    const post = await postModel.findById({ postId }); 
 
     if (!post) {
         return res.status(404).json({
@@ -88,7 +88,10 @@ async function likePostController(req, res) {
     }
 
     // Check if the user has already liked the post
-    const existingLike = await LikeModel.findOne({ post: postId, user: userId });
+    const existingLike = await LikeModel.findOne({ 
+        post: postId, 
+        user: userId 
+    });
 
     if (existingLike) {
         // If the like already exists, remove it (unlike)
@@ -96,8 +99,13 @@ async function likePostController(req, res) {
         return res.status(200).json({ message: 'Post unliked successfully' });
     } else {
         // If the like does not exist, create it (like)
-        await LikeModel.create({ post: postId, username: username });
-        return res.status(200).json({ message: 'Post liked successfully' });
+        await LikeModel.create({ 
+            post: postId, 
+            username: username 
+        });
+        return res.status(200).json({ 
+            message: 'Post liked successfully' 
+        });
     }
 }
 
