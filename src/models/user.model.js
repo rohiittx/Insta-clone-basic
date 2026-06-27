@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema({
 
     password: {
         type: String,
-        required: [true, 'Password is required' ]
+        required: [true, 'Password is required' ],
+        select:false  // select:false means password ko database se select nhi krna hoga jab bhi user ki details fetch karenge to password ko ignore kr denge
     },
 
     bio: String,

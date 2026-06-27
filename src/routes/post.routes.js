@@ -6,7 +6,7 @@ const upload = multer({ storage: multer.memoryStorage() })
 const identifyUser = require('../middleware/auth.middleware')  // middleware
 
 /**
- * POST /api/posts
+ * POST /api/posts/
  * -- req.body = { caption, image-file }
  * /api/posts/ --routing api
  */
@@ -29,5 +29,14 @@ postRouter.get('/details/:postId', identifyUser , postController.getPostDetailsC
  * @access Private (requires authentication)
  */
 postRouter.post('/like/:postId', identifyUser, postController.likePostController)   
+
+/**
+ * @route GET /api/posts/feed
+ * @desc Get the feed of posts for the authenticated user.
+ * @access Private (requires authentication)
+ */
+postRouter.get('/feed', identifyUser, postController.getFeedController)
+
+
 
 module.exports = postRouter   

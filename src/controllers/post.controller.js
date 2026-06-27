@@ -109,9 +109,30 @@ async function likePostController(req, res) {
     }
 }
 
+async function getFeedController(req, res) {
+    const posts = await Promise.all(await postModel.find().populate('user').lean()) //find method se hame user ki sirf id milti h but jab ham find.populate krte h to hame user ki sari details mil jati h
+    .map(async (post)=>{                                                     // lean method mongoose object ko normal object me change kr deti h
+
+        const isLiked = await LikeModel.findOne({
+            user:user.username,
+            post: post._id
+        })
+
+        post.isLiked = Boolean(isLiked)
+
+        return post
+    })
+
+    res.Status(200).json({
+        message: 'Feed fetched successfully',
+        posts
+    })
+}
+
 module.exports = {
     createPostController,
     getPostController,
     getPostDetailsController,
-    likePostController
+    likePostController,
+    getFeedController
 }

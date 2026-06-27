@@ -98,7 +98,7 @@ async function loginController(req,res){
                 email: email
             }
         ]
-    })
+    }).select('+password')  // select('+password') means hame password bhi chahiye user ki details ke sath jo hamne select:false kr diya tha user model m to hame password ko select krne ke liye +password likhna hoga
 
     if(!user){
         return res.status(404).json({
